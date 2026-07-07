@@ -8,7 +8,7 @@ const SHORTCUT_NAME = 'minimize-except-active';
 
 export default class MinimizeOtherrsPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-        this._settings = this.getSettings();
+        const settings = this.getSettings();
 
         const page = new Adw.PreferencesPage({
             title: 'Shortcuts',
@@ -25,17 +25,17 @@ export default class MinimizeOtherrsPreferences extends ExtensionPreferences {
             subtitle: 'Minimize every window in the current workspace except the active one.',
         });
 
-        this._shortcutLabel = new Gtk.ShortcutLabel({
-            accelerator: this._getShortcut(),
+        const shortcutLabel = new Gtk.ShortcutLabel({
+            accelerator: this._getShortcut(settings),
             disabled_text: 'Disabled',
         });
 
         const editButton = new Gtk.Button({
-            child: this._shortcutLabel,
+            child: shortcutLabel,
             valign: Gtk.Align.CENTER,
         });
         editButton.add_css_class('flat');
-        editButton.connect('clicked', () => this._showShortcutDialog(window));
+        editButton.connect('clicked', () => this._showShortcutDialog(window, settings, shortcutLabel));
 
         const resetButton = new Gtk.Button({
             icon_name: 'edit-undo-symbolic',
@@ -44,8 +44,8 @@ export default class MinimizeOtherrsPreferences extends ExtensionPreferences {
         });
         resetButton.add_css_class('flat');
         resetButton.connect('clicked', () => {
-            this._settings.reset(SHORTCUT_NAME);
-            this._syncShortcutLabel();
+            settings.reset(SHORTCUT_NAME);
+            this._syncShortcutLabel(settings, shortcutLabel);
         });
 
         row.add_suffix(editButton);
@@ -57,20 +57,20 @@ export default class MinimizeOtherrsPreferences extends ExtensionPreferences {
         window.add(page);
     }
 
-    _getShortcut() {
-        return this._settings.get_strv(SHORTCUT_NAME)[0] ?? '';
+    _getShortcut(settings) {
+        return settings.get_strv(SHORTCUT_NAME)[0] ?? '';
     }
 
-    _setShortcut(accelerator) {
-        this._settings.set_strv(SHORTCUT_NAME, accelerator ? [accelerator] : []);
-        this._syncShortcutLabel();
+    _setShortcut(settings, shortcutLabel, accelerator) {
+        settings.set_strv(SHORTCUT_NAME, accelerator ? [accelerator] : []);
+        this._syncShortcutLabel(settings, shortcutLabel);
     }
 
-    _syncShortcutLabel() {
-        this._shortcutLabel.accelerator = this._getShortcut();
+    _syncShortcutLabel(settings, shortcutLabel) {
+        shortcutLabel.accelerator = this._getShortcut(settings);
     }
 
-    _showShortcutDialog(parent) {
+    _showShortcutDialog(parent, settings, shortcutLabel) {
         const dialog = new Gtk.Window({
             title: 'Set shortcut',
             modal: true,
@@ -98,7 +98,7 @@ export default class MinimizeOtherrsPreferences extends ExtensionPreferences {
             wrap: true,
         }));
 
-        const currentShortcut = this._getShortcut();
+        const currentShortcut = this._getShortcut(settings);
         const preview = new Gtk.ShortcutLabel({
             accelerator: currentShortcut,
             disabled_text: 'Disabled',
@@ -114,7 +114,7 @@ export default class MinimizeOtherrsPreferences extends ExtensionPreferences {
             }
 
             if (keyval === Gdk.KEY_BackSpace) {
-                this._setShortcut('');
+                this._setShortcut(settings, shortcutLabel, '');
                 dialog.close();
                 return Gdk.EVENT_STOP;
             }
@@ -124,7 +124,7 @@ export default class MinimizeOtherrsPreferences extends ExtensionPreferences {
             if (!Gtk.accelerator_valid(keyval, mask))
                 return Gdk.EVENT_STOP;
 
-            this._setShortcut(Gtk.accelerator_name(keyval, mask));
+            this._setShortcut(settings, shortcutLabel, Gtk.accelerator_name(keyval, mask));
             dialog.close();
             return Gdk.EVENT_STOP;
         });

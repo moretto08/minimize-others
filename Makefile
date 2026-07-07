@@ -1,7 +1,7 @@
-UUID = minimize-otherrs@mateus08
+UUID = minimize-otherrs@mateus.local
 EXTENSION_DIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 
-.PHONY: schemas install enable disable clean
+.PHONY: schemas install enable disable clean zip
 
 schemas:
 	glib-compile-schemas schemas
@@ -20,11 +20,12 @@ disable:
 clean:
 	rm -f schemas/gschemas.compiled
 
-ZIP := $(UUID).zip
+ZIP := $(UUID).shell-extension.zip
 
 zip:
 	rm -f $(ZIP)
-	zip -r $(ZIP) . \
-		-x "*.git*" \
-		-x "schemas/gschemas.compiled" \
-		-x "$(ZIP)"
+	gnome-extensions pack -f \
+		--extra-source=prefs.js \
+		--extra-source=README.md \
+		--schema=schemas/org.gnome.shell.extensions.minimize-otherrs.gschema.xml \
+		.
