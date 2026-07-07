@@ -1,4 +1,4 @@
-UUID = minimize-otherrs@mateus.local
+UUID = minimize-otherrs@mateus08
 EXTENSION_DIR = $(HOME)/.local/share/gnome-shell/extensions/$(UUID)
 
 .PHONY: schemas install enable disable clean
