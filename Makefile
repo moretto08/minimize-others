@@ -19,3 +19,12 @@ disable:
 
 clean:
 	rm -f schemas/gschemas.compiled
+
+ZIP := $(UUID).zip
+
+zip:
+	rm -f $(ZIP)
+	zip -r $(ZIP) . \
+		-x "*.git*" \
+		-x "schemas/gschemas.compiled" \
+		-x "$(ZIP)"
