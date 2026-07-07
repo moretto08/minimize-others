@@ -1,3 +1,6 @@
+# **Disclaimer**
+This extension was vibecodded!
+
 # Minimize Others
 
 GNOME Shell 50 extension that minimizes every normal window in the current workspace except the active one.
