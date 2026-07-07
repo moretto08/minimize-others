@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.minimize-otherrs" path="/org/gnome/shell/extensions/minimize-otherrs/">
+    <key name="minimize-except-active" type="as">
+      <default><![CDATA[['<Super>home']]]></default>
+      <summary>Minimize all windows except the active one</summary>
+      <description>Keyboard shortcut used to minimize all windows in the current workspace except the active window.</description>
+    </key>
+  </schema>
+</schemalist>

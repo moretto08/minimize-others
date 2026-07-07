@@ -1,0 +1,9 @@
+{
+  "uuid": "minimize-otherrs@mateus.local",
+  "name": "Minimize Others",
+  "description": "Minimize all windows except the active one with a keyboard shortcut.",
+  "shell-version": [
+    "50"
+  ],
+  "settings-schema": "org.gnome.shell.extensions.minimize-otherrs"
+}
